@@ -39,3 +39,22 @@ export const updateSeatsStatus = async (client, bookingId, status) => {
     [status, bookingId]
   );
 };
+
+export const getBookingById = async (client, bookingId) => {
+  const booking = await client.query(
+    `SELECT id, user_email, show_id, status
+     FROM bookings
+     WHERE id = $1`,
+    [bookingId]
+  );
+
+  const seats = await client.query(
+    `SELECT seat_id FROM booking_seats WHERE booking_id = $1`,
+    [bookingId]
+  );
+
+  return {
+    ...booking.rows[0],
+    seats: seats.rows.map(s => s.seat_id),
+  };
+};

@@ -46,3 +46,22 @@ export const lockSeatsController = async (req, res) => {
     });
   }
 };
+
+export const getBookingController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const booking = await fetchBooking(id);
+
+    res.json({
+      success: true,
+      data: booking,
+    });
+
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};

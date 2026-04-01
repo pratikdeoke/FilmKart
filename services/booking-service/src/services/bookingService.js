@@ -49,3 +49,18 @@ export const createBooking = async ({ showId, seats, userEmail }) => {
     client.release();
   }
 };
+
+export const fetchBooking = async (bookingId) => {
+  const client = await pool.connect();
+
+  try {
+    const result = await getBookingById(client, bookingId);
+
+    if (!result) throw new Error("Booking not found");
+
+    return result;
+
+  } finally {
+    client.release();
+  }
+};
