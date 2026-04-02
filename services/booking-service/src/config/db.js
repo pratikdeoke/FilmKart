@@ -1,21 +1,34 @@
 import dotenv from "dotenv";
 import pkg from "pg";
+
 const { Pool } = pkg;
 
 dotenv.config();
 
-const dbPassword = String(process.env.DB_PASSWORD ?? "").trim();
-
-if (!dbPassword) {
-  throw new Error("DB_PASSWORD is missing or empty");
-}
 
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: dbPassword,
-  port: Number(process.env.DB_PORT) || 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
+
+
+// async function checkDBConnection() {
+//   try {
+//     const client = await pool.connect();
+//     await client.query("SELECT 1");
+//     client.release();
+
+//     console.log("✅ PostgreSQL connected successfully");
+//   } catch (err) {
+//     console.error("❌ PostgreSQL connection failed:");
+//     console.error(err.message);
+
+//     process.exit(1);
+//   }
+// }
+
+// checkDBConnection();
 
 export default pool;
